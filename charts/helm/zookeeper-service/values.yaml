@@ -33,7 +33,7 @@ global:
   securityContext: {}
 
 operator:
-  dockerImage: ghcr.io/netcracker/qubership-zookeeper-operator:1.0.5-1x
+  dockerImage: ghcr.io/netcracker/qubership-zookeeper-operator:1.0.6-1x
 #  tolerations:
 #    - key: "key1"
 #      operator: "Equal"
@@ -76,7 +76,7 @@ operator:
 
 ## Values for ZooKeeper deployment
 zooKeeper:
-  dockerImage: "ghcr.io/netcracker/qubership-docker-zookeeper:1.0.5-1x
+  dockerImage: "ghcr.io/netcracker/qubership-docker-zookeeper:1.0.6-1x
   affinity: {}
 #  affinity: {
 #    "podAntiAffinity": {
@@ -170,7 +170,7 @@ zooKeeper:
 ## Values for ZooKeeper Monitoring deployment
 monitoring:
   install: true
-  dockerImage: "ghcr.io/netcracker/qubership-zookeeper-monitoring:1.0.5-1x
+  dockerImage: "ghcr.io/netcracker/qubership-zookeeper-monitoring:1.0.6-1x
 #  affinity: {
 #    "podAffinity": {
 #      "preferredDuringSchedulingIgnoredDuringExecution": [
@@ -235,7 +235,7 @@ backupDaemon:
     subjectAlternativeName:
       additionalDnsNames: []
       additionalIpAddresses: []
-  dockerImage: "ghcr.io/netcracker/qubership-zookeeper-backup-daemon:1.0.5-1x
+  dockerImage: "ghcr.io/netcracker/qubership-zookeeper-backup-daemon:1.0.6-1x
 #  affinity: {
 #    "podAffinity": {
 #      "preferredDuringSchedulingIgnoredDuringExecution": [
@@ -348,7 +348,7 @@ integrationTests:
       ]
     }
   }
-  image: "ghcr.io/netcracker/qubership-zookeeper-integration-tests:1.0.5-1x
+  image: "ghcr.io/netcracker/qubership-zookeeper-integration-tests:1.0.6-1x
   tags: "zookeeper_crud"
   # Please override "url" parameter with "6443" port for Kubernetes environment and "8443" for Openshift environment
   url: "https://kube.com:6443"
