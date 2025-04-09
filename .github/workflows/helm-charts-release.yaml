@@ -86,6 +86,8 @@ jobs:
   chart-release:
     needs: [check-tag,load-docker-build-components]
     runs-on: ubuntu-latest
+    outputs:
+      image-version: ${{ steps.update-versions.outputs.image-version }}
     steps:
       - name: Input parameters
         run: |
@@ -94,6 +96,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
       - name: "Update versions in values"
+        id: update-versions
         uses: ./actions/helm-charts-release
         with:
           release: ${{ inputs.release }}
@@ -113,6 +116,7 @@ jobs:
       dry-run: ${{ inputs.dry-run }}
       component: ${{ needs.load-docker-build-components.outputs.component }}
       platforms: ${{ needs.load-docker-build-components.outputs.platforms }}
+      tags: ${{ needs.chart-release.outputs.image-version }}
 
   github-release:
     needs: [chart-release,docker-build]
