@@ -48,3 +48,4 @@ runs:
         git add .
         git commit -m "Set chart and images versions to release [skip ci]"
         git push
+      shell: bash
