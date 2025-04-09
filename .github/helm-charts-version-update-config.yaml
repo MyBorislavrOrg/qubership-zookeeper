@@ -1,7 +1,7 @@
 ---
 
 charts:
-  - name: qubership-zookeeper-operator
+  - name: qubership-zookeeper
     version: ${release}-1x
     chart_file: charts/helm/zookeeper-service/Chart.yaml
     values_file: charts/helm/zookeeper-service/values.yaml
