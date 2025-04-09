@@ -109,6 +109,7 @@ jobs:
     uses: netcracker/qubership-workflow-hub/.github/workflows/tag-creator.yml@main
     with:
       tag-name: "v${{ inputs.release }}"
+      ref: "release-${{ inputs.release }}"
 
   docker-build:
     needs: [tag,load-docker-build-components,chart-release]
