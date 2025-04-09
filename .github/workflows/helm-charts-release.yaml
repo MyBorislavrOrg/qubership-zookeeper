@@ -54,9 +54,9 @@ jobs:
         uses: actions/checkout@v4
       - name: "Update versions in values"
         uses: actions/helm-charts-release
-          with:
-            release: ${{ inputs.release }}
-            config-file: .github/helm-charts-version-update-config.yaml
+        with:
+          release: ${{ inputs.release }}
+          config-file: .github/helm-charts-version-update-config.yaml
   github-release:
     needs: chart-release
     uses: netcracker/qubership-workflow-hub/.github/workflows/release-drafter.yml@main
