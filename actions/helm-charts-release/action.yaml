@@ -12,7 +12,10 @@ inputs:
     description: "Path to the configuration file for updating versions in values.yaml"
     required: true
     type: string
-
+outputs:
+  image-version:
+    description: "Image version"
+    value: ${{ steps.update-chart-version.outputs.image-version }}
 runs:
   using: "composite"
   steps:
