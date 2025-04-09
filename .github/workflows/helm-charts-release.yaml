@@ -16,7 +16,10 @@ on:
 permissions:
   contents: write
   packages: write
-
+run-name: Helm Charts Release ${{ github.event.inputs.release }}
+concurrency:
+  group: 'helm-charts-release-${{ github.event.inputs.release }}'
+  cancel-in-progress: false
 jobs:
   check-tag:
     runs-on: ubuntu-latest
