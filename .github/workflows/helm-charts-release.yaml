@@ -53,7 +53,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
       - name: "Update versions in values"
-        uses: actions/helm-charts-release
+        uses: ./actions/helm-charts-release
         with:
           release: ${{ inputs.release }}
           config-file: .github/helm-charts-version-update-config.yaml
