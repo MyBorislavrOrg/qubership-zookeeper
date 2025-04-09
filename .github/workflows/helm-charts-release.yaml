@@ -8,6 +8,11 @@ on:
         description: 'Release version'
         required: true
         type: string
+      dry-run:
+        type: boolean
+        description: 'Dry run'
+        required: false
+        default: true
 permissions:
   contents: write
 
@@ -42,8 +47,43 @@ jobs:
           echo "Tag already exists: v${{ inputs.release }}"
           exit 1
 
+  load-docker-build-components:
+    needs: [check-tag]
+    runs-on: ubuntu-latest
+    outputs:
+      component: ${{ steps.load_component.outputs.components }}
+      platforms: ${{ steps.load_component.outputs.platforms }}
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Load Docker Configuration
+      id: load_component
+      run:  |
+        verify=$(cat "$GITHUB_WORKSPACE/.github/docker-build-config.json" | jq '
+        def verify_structure:
+        .components as $components
+        | .platforms as $platforms
+        | ($components | type == "array")
+        and (all($components[]; has("name") and has("file") and has("context")))
+        and ($platforms | type == "string");
+        verify_structure
+        | if . then true else false end
+        ')
+        if [ ${verify} == 'true' ]; then
+          echo "✅ $GITHUB_WORKSPACE/.github/docker-build-config.json file is valid"
+          components=$(jq -c ".components" "$GITHUB_WORKSPACE/.github/docker-build-config.json")
+          platforms=$(jq -c ".platforms" "$GITHUB_WORKSPACE/.github/docker-build-config.json")
+        else
+          echo "❗ $GITHUB_WORKSPACE/.github/docker-build-config.json file is invalid"
+          echo "❗ $GITHUB_WORKSPACE/.github/docker-build-config.json file is invalid" >> $GITHUB_STEP_SUMMARY
+          exit 1
+        fi
+        echo "components=${components}" >> $GITHUB_OUTPUT
+        echo "platforms=${platforms}" >> $GITHUB_OUTPUT
+
   chart-release:
-    needs: check-tag
+    needs: [check-tag,load-docker-build-components]
     runs-on: ubuntu-latest
     steps:
       - name: Input parameters
@@ -57,8 +97,24 @@ jobs:
         with:
           release: ${{ inputs.release }}
           config-file: .github/helm-charts-version-update-config.yaml
+  tag:
+    needs: [chart-release]
+    uses: netcracker/qubership-workflow-hub/.github/workflows/tag-creator.yml@main
+    with:
+      tag-name: "v${{ github.event.inputs.version }}"
+
+  docker-build:
+    needs: [tag,load-docker-build-components]
+    uses: netcracker/qubership-workflow-hub/.github/workflows/docker-publish.yml@main
+    with:
+      ref: v${{ inputs.release }}
+      download-artifact: false
+      dry-run: ${{ inputs.dry-run }}
+      component: ${{ needs.load-docker-build-components.outputs.component }}
+      platforms: ${{ needs.load-docker-build-components.outputs.platforms }}
+
   github-release:
-    needs: chart-release
+    needs: [chart-release,docker-build]
     uses: netcracker/qubership-workflow-hub/.github/workflows/release-drafter.yml@main
     with:
       version: ${{ inputs.release }}
