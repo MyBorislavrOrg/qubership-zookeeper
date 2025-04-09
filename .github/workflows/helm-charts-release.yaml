@@ -108,7 +108,7 @@ jobs:
       tag-name: "v${{ inputs.release }}"
 
   docker-build:
-    needs: [tag,load-docker-build-components]
+    needs: [tag,load-docker-build-components,chart-release]
     uses: netcracker/qubership-workflow-hub/.github/workflows/docker-publish.yml@main
     with:
       ref: v${{ inputs.release }}
