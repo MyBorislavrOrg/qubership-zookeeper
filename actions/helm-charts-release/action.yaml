@@ -36,12 +36,12 @@ runs:
           os.system(f"sed -i 's|^version:.*|version: {release}|' {chart_file}")
           # Update image version in values.yaml
           image_ver = chart['version'].replace('${release}', f"{release}")
+          with open(os.environ['GITHUB_OUTPUT'], 'a') as f:
+            f.write(f"image-version={image_ver}\n")
           for image in chart['image']:
             print(f"Updating image version: {image} to {image_ver}")
             search_str = image.replace('${version}', '')
             os.system(f"sed -i 's|{search_str}.*|{search_str}{image_ver}|' {values_file}")
-        with open(os.environ['GITHUB_OUTPUT'], 'a') as f:
-          f.write(f"image-version={image_ver}\n")
       shell: python
     - name: "Commit changed files"
       run: |
