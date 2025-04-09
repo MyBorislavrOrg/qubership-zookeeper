@@ -21,6 +21,16 @@ runs:
   steps:
     - name: Checkout code
       uses: actions/checkout@v4
+    - name: "Create release branch"
+      id: create-release-branch
+      run: |
+        git config --global user.name "qubership-actions[bot]"
+        git config --global user.email "qubership-actions[bot]@users.noreply.github.com"
+        git checkout -b release-${{ inputs.release }}
+        git config pull.rebase false
+        git pull origin main
+        git push --set-upstream origin release-${{ inputs.release }}
+      shell: bash
 
     - name: "Update chart version"
       id: update-chart-version
