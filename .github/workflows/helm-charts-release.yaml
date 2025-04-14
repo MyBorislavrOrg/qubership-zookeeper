@@ -95,7 +95,7 @@ jobs:
       dry-run: true
       component: ${{ needs.load-docker-build-components.outputs.component }}
       platforms: ${{ needs.load-docker-build-components.outputs.platforms }}
-      tags: "test"
+      tags: "test-${{ inputs.release }}"
 
   chart-release:
     needs: [docker-check-build,check-tag,load-docker-build-components]
