@@ -90,7 +90,7 @@ jobs:
     needs: [load-docker-build-components]
     uses: netcracker/qubership-workflow-hub/.github/workflows/docker-publish.yml@main
     with:
-      ref: v${{ github.ref }}
+      ref: ${{ github.ref }}
       download-artifact: false
       dry-run: true
       component: ${{ needs.load-docker-build-components.outputs.component }}
