@@ -92,7 +92,7 @@ jobs:
     with:
       ref: v${{ github.ref }}
       download-artifact: false
-      dry-run: 'true'
+      dry-run: true
       component: ${{ needs.load-docker-build-components.outputs.component }}
       platforms: ${{ needs.load-docker-build-components.outputs.platforms }}
       tags: "test"
