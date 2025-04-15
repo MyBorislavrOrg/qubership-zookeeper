@@ -115,11 +115,11 @@ jobs:
         run: |
           echo "Release version: ${{ inputs.release }}" >> $GITHUB_STEP_SUMMARY
 
-      - name: Checkout code
-        uses: actions/checkout@v4
+      # - name: Checkout code
+      #   uses: actions/checkout@v4
       - name: "Update versions in values"
         id: update-versions
-        uses: ./actions/helm-charts-release
+        uses: borislavr/qubership-workflow-hub/actions/helm-charts-release@main
         with:
           release: ${{ inputs.release }}
           config-file: .github/helm-charts-release-config.yaml
