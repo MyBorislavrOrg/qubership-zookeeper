@@ -106,6 +106,7 @@ jobs:
 
   chart-release:
     needs: [docker-check-build,check-tag,load-docker-build-components]
+    if: ${{ true }}
     runs-on: ubuntu-latest
     outputs:
       image-version: ${{ steps.update-versions.outputs.image-version }}
