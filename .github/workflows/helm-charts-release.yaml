@@ -8,17 +8,17 @@ on:
         description: 'Release version'
         required: true
         type: string
-      dry-run:
+      build-docker-before-release:
         type: boolean
-        description: 'Dry run'
+        description: 'Build docker images before release without publication.'
         required: false
         default: true
 permissions:
   contents: write
   packages: write
-run-name: Helm Charts Release ${{ github.event.inputs.release }}
+run-name: ${{ github.repository }} Release ${{ github.event.inputs.release }}
 concurrency:
-  group: 'helm-charts-release-${{ github.event.inputs.release }}'
+  group: 'helm-charts-release'
   cancel-in-progress: false
 jobs:
   check-tag:
@@ -94,6 +94,7 @@ jobs:
 
   docker-check-build:
     needs: [load-docker-build-components]
+    if: ${{ inputs.build-docker-before-release }}
     uses: netcracker/qubership-workflow-hub/.github/workflows/docker-publish.yml@main
     with:
       ref: ${{ github.ref }}
@@ -120,7 +121,7 @@ jobs:
         uses: ./actions/helm-charts-release
         with:
           release: ${{ inputs.release }}
-          config-file: .github/helm-charts-version-update-config.yaml
+          config-file: .github/helm-charts-release-config.yaml
   tag:
     needs: [chart-release]
     uses: netcracker/qubership-workflow-hub/.github/workflows/tag-creator.yml@main
@@ -134,7 +135,7 @@ jobs:
     with:
       ref: v${{ inputs.release }}
       download-artifact: false
-      dry-run: ${{ inputs.dry-run }}
+      dry-run: false
       component: ${{ needs.load-docker-build-components.outputs.component }}
       platforms: ${{ needs.load-docker-build-components.outputs.platforms }}
       tags: "${{ needs.chart-release.outputs.image-version }},latest"
