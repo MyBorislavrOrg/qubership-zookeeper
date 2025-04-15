@@ -26,7 +26,8 @@ jobs:
     steps:
       - name: Input parameters
         run: |
-          echo "Release version: ${{ inputs.release }}" >> $GITHUB_STEP_SUMMARY
+          echo "Checking tag for release version: ${{ inputs.release }}" >> $GITHUB_STEP_SUMMARY
+          echo "Tag name: v${{ inputs.release }}" >> $GITHUB_STEP_SUMMARY
 
       - name: Checkout code
         uses: actions/checkout@v4
@@ -47,9 +48,14 @@ jobs:
       - name: Fail if tag exists
         if: steps.check_tag.outputs.exists == 'true'
         run: |
-          echo "Tag already exists: v${{ inputs.release }}" >> $GITHUB_STEP_SUMMARY
-          echo "Tag already exists: v${{ inputs.release }}"
+          echo "❌ Fail. Tag v${{ inputs.release }} already exists." >> $GITHUB_STEP_SUMMARY
+          echo "❌ Tag already exists: v${{ inputs.release }}"
           exit 1
+      - name: Success
+        if: steps.check_tag.outputs.exists == 'false'
+        run: |
+          echo "✅ Tag v${{ inputs.release }} does not exist. Proceeding with the release." >> $GITHUB_STEP_SUMMARY
+          echo "✅ Tag does not exist: v${{ inputs.release }}"
 
   load-docker-build-components:
     needs: [check-tag]
