@@ -8,11 +8,6 @@ on:
         description: 'Release version'
         required: true
         type: string
-      build-docker-before-release:
-        type: boolean
-        description: 'Build docker images before release without publication.'
-        required: false
-        default: true
 permissions:
   contents: write
   packages: write
@@ -94,7 +89,6 @@ jobs:
 
   docker-check-build:
     needs: [load-docker-build-components]
-    if: ${{ inputs.build-docker-before-release }}
     uses: netcracker/qubership-workflow-hub/.github/workflows/docker-publish.yml@main
     with:
       ref: ${{ github.ref }}
@@ -106,7 +100,6 @@ jobs:
 
   chart-release:
     needs: [docker-check-build,check-tag,load-docker-build-components]
-    if: always() && (needs.docker-check-build.result == 'success' || needs.docker-check-build.result == 'skipped')
     runs-on: ubuntu-latest
     outputs:
       image-version: ${{ steps.update-versions.outputs.image-version }}
@@ -115,8 +108,6 @@ jobs:
         run: |
           echo "Release version: ${{ inputs.release }}" >> $GITHUB_STEP_SUMMARY
 
-      # - name: Checkout code
-      #   uses: actions/checkout@v4
       - name: "Update versions in values"
         id: update-versions
         uses: borislavr/qubership-workflow-hub/actions/helm-charts-release@main
