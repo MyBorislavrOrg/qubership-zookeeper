@@ -106,7 +106,7 @@ jobs:
 
   chart-release:
     needs: [docker-check-build,check-tag,load-docker-build-components]
-    if: ${{ true }}
+    if: always() && (needs.docker-check-build.result == 'success' || needs.docker-check-build.result == 'skipped')
     runs-on: ubuntu-latest
     outputs:
       image-version: ${{ steps.update-versions.outputs.image-version }}
