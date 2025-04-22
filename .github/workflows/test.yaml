@@ -8,7 +8,7 @@ jobs:
     test:
         runs-on: ubuntu-latest
         steps:
-            - name: "Debug"
+            - name: "Debug 0"
               if: ${{ toJson(vars) != '{}' }}
               run: |
                 echo "GITHUB_WORKSPACE: $GITHUB_WORKSPACE"
@@ -25,3 +25,11 @@ jobs:
                 echo "GITHUB_ACTION: $GITHUB_ACTION"
                 echo "GITHUB_HEAD_REF: $GITHUB_HEAD_REF"
                 echo "${{ toJson(vars) }}"
+            - name: "Debug 1"
+              if: ${{ toJson(vars) != '{}' }}
+              run: |
+                env
+                echo "vars.ZOO_VERSION: ${{ vars.ZOO_VERSION }}"
+                echo "env.ZOO_VERSION: $ZOO_VERSION"
+              env:
+                ${{ insert }}: ${{ vars }}
