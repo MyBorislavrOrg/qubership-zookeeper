@@ -110,6 +110,9 @@ jobs:
         with:
           release-version: ${{ inputs.release }}
           config-file: .github/helm-charts-release-config.yaml
+        env:
+          ${{ insert }}: ${{ vars }}
+
       - name: "Debug"
         run: |
           echo "Images versions: ${{ steps.update-versions.outputs.images-versions }}"
