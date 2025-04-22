@@ -9,6 +9,7 @@ jobs:
         runs-on: ubuntu-latest
         steps:
             - name: "Debug"
+              if: ${{ vars }}
               run: |
                 echo "GITHUB_WORKSPACE: $GITHUB_WORKSPACE"
                 echo "GITHUB_REF: $GITHUB_REF"
