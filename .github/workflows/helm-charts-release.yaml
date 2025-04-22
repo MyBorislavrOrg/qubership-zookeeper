@@ -110,6 +110,9 @@ jobs:
         with:
           release-version: ${{ inputs.release }}
           config-file: .github/helm-charts-release-config.yaml
+      - name: "Debug"
+        run: |
+          echo "Images versions: ${{ steps.update-versions.outputs.images-versions }}"
   tag:
     needs: [chart-release]
     runs-on: ubuntu-latest
