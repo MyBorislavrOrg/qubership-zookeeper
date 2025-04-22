@@ -104,9 +104,9 @@ jobs:
 
       - name: "Update versions in values"
         id: update-versions
-        uses: netcracker/qubership-workflow-hub/actions/helm-charts-release@main
+        uses: netcracker/qubership-workflow-hub/actions/helm-charts-release@feature/charts-version-change
         with:
-          release: ${{ inputs.release }}
+          release-version: ${{ inputs.release }}
           config-file: .github/helm-charts-release-config.yaml
   tag:
     needs: [chart-release]
