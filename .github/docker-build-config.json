@@ -6,11 +6,6 @@
             "context": "integration-tests"
         },
         {
-            "name": "qubership-zookeeper-operator",
-            "file": "Dockerfile",
-            "context": "."
-        },
-        {
             "name": "qubership-zookeeper-transfer",
             "file": "docker-transfer/Dockerfile",
             "context": ""
