@@ -101,6 +101,8 @@ jobs:
       - name: Input parameters
         run: |
           echo "Release version: ${{ inputs.release }}" >> $GITHUB_STEP_SUMMARY
+      - name: Checkout code
+        uses: actions/checkout@v4
 
       - name: "Update versions in values"
         id: update-versions
