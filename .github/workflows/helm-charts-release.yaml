@@ -98,9 +98,6 @@ jobs:
     outputs:
       images-versions: ${{ steps.update-versions.outputs.images-versions }}
     steps:
-      - name: Input parameters
-        run: |
-          echo "Release version: ${{ inputs.release }}" >> $GITHUB_STEP_SUMMARY
       - name: Checkout code
         uses: actions/checkout@v4
 
