@@ -92,7 +92,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-  chart-release-prepare:
+  chart-release:
     needs: [docker-check-build,check-tag,load-docker-build-components]
     runs-on: ubuntu-latest
     outputs:
@@ -109,25 +109,18 @@ jobs:
           config-file: .github/helm-charts-release-config.yaml
         env:
           ${{ insert }}: ${{ vars }}
-
-      - name: "Debug"
-        run: |
-          echo "Images versions: ${{ steps.update-versions.outputs.images-versions }}"
-
-  chart-release:
-    needs: [chart-release-prepare]
-    runs-on: ubuntu-latest
-    steps:
       - name: Run chart-releaser
         uses: helm/chart-releaser-action@v1.6.0
         with:
           charts_dir: charts/helm/zookeeper-service
         env:
           CR_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
-    
+      - name: "Debug"
+        run: |
+          echo "Images versions: ${{ steps.update-versions.outputs.images-versions }}"
   
   docker-build:
-    needs: [chart-release,load-docker-build-components,chart-release-prepare]
+    needs: [chart-release,load-docker-build-components]
     runs-on: ubuntu-latest
     strategy:
       fail-fast: true
@@ -137,7 +130,7 @@ jobs:
       - name: Get version for current component
         id: get-version
         run: |
-          echo "IMAGE_VERSION=${{ fromJson(needs.chart-release-prepare.outputs.images-versions)[matrix.component.name] || inputs.release }}" >> $GITHUB_ENV
+          echo "IMAGE_VERSION=${{ fromJson(needs.chart-release.outputs.images-versions)[matrix.component.name] || inputs.release }}" >> $GITHUB_ENV
       - name: Docker build
         uses: netcracker/qubership-workflow-hub/actions/docker-action@main
         with:
