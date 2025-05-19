@@ -100,7 +100,12 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-
+        with:
+          fetch-depth: 0
+      - name: Configure Git
+        run: |
+          git config user.name "$GITHUB_ACTOR"
+          git config user.email "$GITHUB_ACTOR@users.noreply.github.com"
       - name: "Update versions in values"
         id: update-versions
         uses: netcracker/qubership-workflow-hub/actions/helm-charts-release@main
