@@ -106,14 +106,14 @@ jobs:
         run: |
           git config user.name "$GITHUB_ACTOR"
           git config user.email "$GITHUB_ACTOR@users.noreply.github.com"
-      - name: "Update versions in values"
-        id: update-versions
-        uses: netcracker/qubership-workflow-hub/actions/helm-charts-release@main
-        with:
-          release-version: ${{ inputs.release }}
-          config-file: .github/helm-charts-release-config.yaml
-        env:
-          ${{ insert }}: ${{ vars }}
+#      - name: "Update versions in values"
+#        id: update-versions
+#        uses: netcracker/qubership-workflow-hub/actions/helm-charts-release@main
+#        with:
+#          release-version: ${{ inputs.release }}
+#          config-file: .github/helm-charts-release-config.yaml
+#        env:
+#          ${{ insert }}: ${{ vars }}
       - name: Run chart-releaser
         uses: helm/chart-releaser-action@v1.6.0
         with:
