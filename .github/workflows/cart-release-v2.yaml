@@ -118,7 +118,12 @@ jobs:
     needs: [chart-release-prepare]
     runs-on: ubuntu-latest
     steps:
-      - name: actions/checkout@v4
+      - name: Run chart-releaser
+        uses: helm/chart-releaser-action@v1.6.0
+        with:
+          charts_dir: charts/helm/zookeeper-service
+        env:
+          CR_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
     
   
   docker-build:
@@ -146,7 +151,7 @@ jobs:
           GITHUB_TOKEN: ${{ github.token }}
 
   upload-assets:
-    needs: [github-release]
+    needs: [chart-release]
     runs-on: ubuntu-latest
     steps:
     - name: Checkout code
