@@ -90,8 +90,8 @@ jobs:
 #          ${{ insert }}: ${{ vars }}
       - name: Run chart-releaser
         uses: helm/chart-releaser-action@v1.6.0
-#        with:
-#          charts_dir: charts/helm/zookeeper-service
+        with:
+          charts_dir: charts/helm
         env:
           CR_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
       - name: "Debug"
